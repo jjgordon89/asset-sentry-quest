@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -12,8 +13,12 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1.5rem',
 			screens: {
+				'sm': '640px',
+				'md': '768px',
+				'lg': '1024px',
+				'xl': '1280px',
 				'2xl': '1400px'
 			}
 		},
@@ -61,7 +66,39 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+                status: {
+                    success: {
+                        light: '#e6f7ed',
+                        DEFAULT: '#00c853',
+                        dark: '#00a148'
+                    },
+                    warning: {
+                        light: '#fff8e6',
+                        DEFAULT: '#ffc107',
+                        dark: '#e0a800'
+                    },
+                    danger: {
+                        light: '#ffebee',
+                        DEFAULT: '#f44336',
+                        dark: '#e31b0c'
+                    },
+                    info: {
+                        light: '#e8f4fd',
+                        DEFAULT: '#2196f3',
+                        dark: '#0b79d0'
+                    },
+                    neutral: {
+                        light: '#f5f5f5',
+                        DEFAULT: '#9e9e9e',
+                        dark: '#757575'
+                    }
+                },
+                priority: {
+                    low: '#ffc107',
+                    medium: '#ff9800',
+                    high: '#f44336'
+                }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -70,26 +107,56 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+                'fade-in': {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' }
+                },
+                'fade-out': {
+                    '0%': { opacity: '1' },
+                    '100%': { opacity: '0' }
+                },
+                'slide-up': {
+                    '0%': { transform: 'translateY(10px)', opacity: '0' },
+                    '100%': { transform: 'translateY(0)', opacity: '1' }
+                },
+                'slide-down': {
+                    '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                    '100%': { transform: 'translateY(0)', opacity: '1' }
+                },
+                'slide-in-right': {
+                    '0%': { transform: 'translateX(10px)', opacity: '0' },
+                    '100%': { transform: 'translateX(0)', opacity: '1' }
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+                'fade-in': 'fade-in 0.3s ease-out',
+                'fade-out': 'fade-out 0.3s ease-out',
+                'slide-up': 'slide-up 0.4s ease-out',
+                'slide-down': 'slide-down 0.4s ease-out',
+                'slide-in-right': 'slide-in-right 0.4s ease-out'
+			},
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+            },
+            boxShadow: {
+                'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                'glass-hover': '0 8px 32px rgba(0, 0, 0, 0.15)',
+                'card': '0 2px 12px -2px rgba(0, 0, 0, 0.08)',
+                'card-hover': '0 12px 24px -4px rgba(0, 0, 0, 0.12)',
+            },
+            transitionDuration: {
+                '400': '400ms',
+            }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
