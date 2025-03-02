@@ -3,7 +3,7 @@ import { ActivityItem } from "@/types";
 import { 
   Clock, 
   ClipboardCheck, 
-  Tool, 
+  Wrench, 
   RefreshCw,
   StickyNote
 } from "lucide-react";
@@ -25,7 +25,7 @@ const RecentActivity = ({ activities }: RecentActivityProps) => {
       case "maintenance":
         return (
           <div className="w-8 h-8 rounded-full bg-status-warning/10 flex items-center justify-center">
-            <Tool className="h-4 w-4 text-status-warning" />
+            <Wrench className="h-4 w-4 text-status-warning" />
           </div>
         );
       case "status-change":
