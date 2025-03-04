@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Assets from "./pages/Assets";
 import AssetDetails from "./pages/AssetDetails";
+import AddAsset from "./pages/AddAsset";
 import Inspections from "./pages/Inspections";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assets" element={<Assets />} />
+          <Route path="/assets/new" element={<AddAsset />} />
           <Route path="/assets/:id" element={<AssetDetails />} />
           <Route path="/inspections" element={<Inspections />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
