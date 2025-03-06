@@ -10,7 +10,7 @@ interface AssetTabFilterProps {
 const AssetTabFilter: React.FC<AssetTabFilterProps> = ({ activeTab, onTabChange }) => {
   return (
     <Tabs 
-      defaultValue={activeTab} 
+      value={activeTab} 
       className="mb-8"
       onValueChange={onTabChange}
     >

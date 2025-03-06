@@ -55,6 +55,11 @@ const Navbar = () => {
       icon: <ClipboardCheck className="w-5 h-5" /> 
     },
     { 
+      name: "Templates", 
+      path: "/inspection-templates", 
+      icon: <ClipboardCheck className="w-5 h-5" /> 
+    },
+    { 
       name: "Reports", 
       path: "/reports", 
       icon: <BarChart4 className="w-5 h-5" /> 

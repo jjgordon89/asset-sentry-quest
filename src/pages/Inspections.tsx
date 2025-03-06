@@ -1,6 +1,7 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { inspectionsApi, ApiError } from "@/services/api";
 import PageTransition from "@/components/layout/PageTransition";
 import { Inspection } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -9,150 +10,50 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, PlusCircle, X } from "lucide-react";
 import InspectionCard from "@/components/inspections/InspectionCard";
 
-const Inspections = () => {
+export const Inspections = () => {
   const navigate = useNavigate();
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [filteredInspections, setFilteredInspections] = useState<Inspection[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("all");
 
-  // Simulate data loading
   useEffect(() => {
-    // In a real app, this would be an API call
-    setTimeout(() => {
-      const dummyInspections: Inspection[] = [
-        {
-          id: "1",
-          assetId: "asset1",
-          assetName: "Forklift #A102",
-          inspectionType: "Monthly Safety Check",
-          date: "2023-04-15",
-          completedBy: "John Doe",
-          status: "completed",
-          items: [
-            {
-              id: "item1",
-              question: "Are all safety features functional?",
-              status: "pass",
-              priority: null,
-              notes: null,
-            },
-            {
-              id: "item2",
-              question: "Is the hydraulic system working properly?",
-              status: "pass",
-              priority: null,
-              notes: null,
-            },
-            {
-              id: "item3",
-              question: "Is the horn working?",
-              status: "fail",
-              priority: "medium",
-              notes: "Horn is not loud enough, needs adjustment",
-            },
-          ],
-          notes: "Overall in good condition, horn needs to be fixed",
-          photos: ["https://via.placeholder.com/300"],
-        },
-        {
-          id: "2",
-          assetId: "asset2",
-          assetName: "Air Compressor #C55",
-          inspectionType: "Quarterly Maintenance",
-          date: "2023-03-01",
-          completedBy: "Jane Smith",
-          status: "completed",
-          items: [
-            {
-              id: "item1",
-              question: "Oil change completed?",
-              status: "pass",
-              priority: null,
-              notes: null,
-            },
-            {
-              id: "item2",
-              question: "Filters replaced?",
-              status: "pass",
-              priority: null,
-              notes: null,
-            },
-          ],
-          notes: "All maintenance tasks completed",
-          photos: [],
-        },
-        {
-          id: "3",
-          assetId: "asset3",
-          assetName: "Generator #G20",
-          inspectionType: "Monthly Operational Test",
-          date: "2023-05-10",
-          completedBy: "Mike Johnson",
-          status: "in-progress",
-          items: [
-            {
-              id: "item1",
-              question: "Does generator start properly?",
-              status: "fail",
-              priority: "high",
-              notes: "Generator fails to start consistently",
-            },
-            {
-              id: "item2",
-              question: "Is fuel level adequate?",
-              status: "pass",
-              priority: null,
-              notes: null,
-            },
-          ],
-          notes: "Generator starting issues, needs service",
-          photos: [],
-        },
-        {
-          id: "4",
-          assetId: "asset4",
-          assetName: "Pallet Jack #P44",
-          inspectionType: "Annual Inspection",
-          date: "2023-05-20",
-          completedBy: "Pending",
-          status: "pending",
-          items: [
-            {
-              id: "item1",
-              question: "Are wheels in good condition?",
-              status: "na",
-              priority: null,
-              notes: null,
-            },
-            {
-              id: "item2",
-              question: "Do hydraulics function properly?",
-              status: "na",
-              priority: null,
-              notes: null,
-            },
-          ],
-          notes: null,
-          photos: [],
-        },
-      ];
+    const abortController = new AbortController();
+    
+    const fetchInspections = async () => {
+      try {
+        setError(null);
+        setIsLoading(true);
+        const data = await inspectionsApi.getInspections({ signal: abortController.signal });
+        
+        if (!abortController.signal.aborted) {
+          setInspections(data);
+          setFilteredInspections(data);
+        }
+      } catch (error) {
+        if (!abortController.signal.aborted) {
+          const errorMessage = error instanceof ApiError 
+            ? error.message 
+            : 'Failed to fetch inspections. Please try again later.';
+          setError(errorMessage);
+          console.error('Failed to fetch inspections:', error);
+        }
+      } finally {
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-      setInspections(dummyInspections);
-      setFilteredInspections(dummyInspections);
-      setIsLoading(false);
-    }, 800);
+    fetchInspections();
+    return () => abortController.abort();
   }, []);
 
-  useEffect(() => {
-    filterInspections(searchQuery, activeTab);
-  }, [searchQuery, activeTab, inspections]);
-
-  const filterInspections = (query: string, tab: string) => {
+  const filterInspections = useCallback((query: string, tab: string) => {
     let filtered = [...inspections];
     
-    // Filter by search query
     if (query) {
       const lowercaseQuery = query.toLowerCase();
       filtered = filtered.filter(
@@ -163,14 +64,21 @@ const Inspections = () => {
       );
     }
     
-    // Filter by tab/status
     if (tab !== "all") {
       filtered = filtered.filter(inspection => inspection.status === tab);
     }
     
-    setFilteredInspections(filtered);
-  };
-
+    return filtered;
+  }, [inspections]);
+  
+  const filteredResults = useMemo(() => {
+    return filterInspections(searchQuery, activeTab);
+  }, [filterInspections, searchQuery, activeTab]);
+  
+  useEffect(() => {
+    setFilteredInspections(filteredResults);
+  }, [filteredResults]);
+  
   return (
     <PageTransition>
       <div className="pt-20 pb-16 container">
@@ -190,64 +98,47 @@ const Inspections = () => {
           </Button>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-6">
-          <div className="relative w-full md:w-auto md:flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search inspections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6"
-                onClick={() => setSearchQuery("")}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-
-        <Tabs 
-          defaultValue="all" 
-          className="mb-8"
-          onValueChange={setActiveTab}
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-            <TabsTrigger value="in-progress">In Progress</TabsTrigger>
-            <TabsTrigger value="pending">Pending</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-pulse flex flex-col items-center">
-              <div className="h-12 w-12 rounded-full bg-muted mb-4"></div>
-              <div className="h-4 w-32 bg-muted rounded"></div>
-            </div>
+          <div className="flex justify-center items-center min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
-        ) : filteredInspections.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredInspections.map((inspection) => (
-              <InspectionCard key={inspection.id} inspection={inspection} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-center">
-            <h3 className="text-lg font-medium mb-2">No inspections found</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery ? "Try adjusting your search" : "Start by creating your first inspection"}
-            </p>
-            <Button onClick={() => navigate("/inspections/new")}>
-              Create New Inspection
+        ) : error ? (
+          <div className="bg-destructive/15 text-destructive p-4 rounded-lg">
+            <p>{error}</p>
+            <Button 
+              variant="outline" 
+              className="mt-2"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
             </Button>
           </div>
+        ) : (
+          <>
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-6">
+              <div className="relative w-full md:w-auto md:flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search inspections..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+
+            {filteredInspections.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No inspections found</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {filteredInspections.map((inspection) => (
+                  <InspectionCard key={inspection.id} inspection={inspection} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </PageTransition>

@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import SearchInput from "./SearchInput";
 import FilterSection from "./FilterSection";
 import AddAssetButton from "./AddAssetButton";
@@ -17,6 +19,7 @@ interface AssetFiltersProps {
 const AssetFilters = ({
   onSearch,
   onFilterChange,
+  onAddNew,
 }: AssetFiltersProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -68,7 +71,14 @@ const AssetFilters = ({
           onFilterChange={handleFilterChange}
         />
 
-        <AddAssetButton />
+        {onAddNew ? (
+          <Button onClick={onAddNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Asset
+          </Button>
+        ) : (
+          <AddAssetButton />
+        )}
       </div>
     </div>
   );

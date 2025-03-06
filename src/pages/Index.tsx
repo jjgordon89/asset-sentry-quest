@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { BadgeCheck, BarChart2, Clipboard, Wrench } from "lucide-react";
+import FeatureCard from "@/components/shared/FeatureCard";
 
 const Index = () => {
   return (
@@ -74,20 +75,6 @@ const Index = () => {
           </Button>
         </div>
       </section>
-    </div>
-  );
-};
-
-const FeatureCard = ({ icon, title, description }: { 
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-all">
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
     </div>
   );
 };

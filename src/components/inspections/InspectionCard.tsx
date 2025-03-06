@@ -7,24 +7,14 @@ import {
   ClipboardCheck,
   User
 } from "lucide-react";
+import StatusBadge from "@/components/shared/StatusBadge";
 
 interface InspectionCardProps {
   inspection: Inspection;
 }
 
 const InspectionCard = ({ inspection }: InspectionCardProps) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-status-success text-white";
-      case "pending":
-        return "bg-status-warning text-white";
-      case "in-progress":
-        return "bg-status-info text-white";
-      default:
-        return "bg-status-neutral text-white";
-    }
-  };
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -54,9 +44,7 @@ const InspectionCard = ({ inspection }: InspectionCardProps) => {
                 {inspection.assetName}
               </p>
             </div>
-            <div className={`text-xs px-2 py-1 rounded-full ${getStatusColor(inspection.status)}`}>
-              {inspection.status.charAt(0).toUpperCase() + inspection.status.slice(1)}
-            </div>
+            <StatusBadge status={inspection.status} />
           </div>
           
           <div className="mt-4 space-y-2 text-sm">

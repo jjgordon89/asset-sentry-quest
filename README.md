@@ -1,69 +1,146 @@
-# Welcome to your Lovable project
+# Asset Sentry Quest
 
-## Project info
+A modern asset management application built with React, TypeScript, and Tailwind CSS. This application helps organizations track, manage, and maintain their physical assets.
 
-**URL**: https://lovable.dev/projects/c824c1e2-e4e0-4cd7-8b1f-4157e7d8dfac
+## Features
 
-## How can I edit this code?
+### Asset Management
+- Create, view, update, and delete assets
+- Track asset details including serial numbers, locations, and status
+- Filter and search assets by various criteria
+- QR code generation for easy asset identification
 
-There are several ways of editing your application.
+### Inspection Management
+- Schedule and track asset inspections
+- Record inspection results and findings
+- Track maintenance history
 
-**Use Lovable**
+### Dashboard & Analytics
+- Visual overview of asset status and health
+- Track key metrics like active assets, maintenance needs
+- Recent activity tracking
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c824c1e2-e4e0-4cd7-8b1f-4157e7d8dfac) and start prompting.
+## Technical Implementation
 
-Changes made via Lovable will be committed automatically to this repo.
+### Architecture
+- React with TypeScript for type safety
+- React Router for navigation
+- React Query for data fetching and caching
+- Tailwind CSS for styling
+- Shadcn UI components for consistent design
 
-**Use your preferred IDE**
+### API Integration
+- Clean service layer for API communication
+- Support for both mock data and real API endpoints
+- Error handling and loading states
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Form Handling
+- Zod schema validation for robust form validation
+- Custom form validation hooks
+- Consistent error messaging
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Error Handling
+- Global error boundaries to prevent app crashes
+- Contextual error messages
+- Toast notifications for user feedback
 
-Follow these steps:
+### Responsive Design
+- Mobile-first approach
+- Responsive layouts for all screen sizes
+- Device detection for optimized experiences
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Installation
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to the project directory
+cd asset-sentry-quest
+
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file in the root directory with the following variables:
 
-**Use GitHub Codespaces**
+```
+VITE_API_BASE_URL=your-api-url
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+/src
+  /components     # Reusable UI components
+    /assets       # Asset-specific components
+    /dashboard    # Dashboard components
+    /inspections  # Inspection components
+    /layout       # Layout components
+    /shared       # Shared components
+    /ui           # UI components (buttons, cards, etc.)
+  /hooks          # Custom React hooks
+  /lib            # Utility functions
+  /pages          # Page components
+  /services       # API services
+  /types          # TypeScript type definitions
+```
 
-This project is built with .
+## Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Building for Production
 
-## How can I deploy this project?
+```bash
+# Create production build
+npm run build
 
-Simply open [Lovable](https://lovable.dev/projects/c824c1e2-e4e0-4cd7-8b1f-4157e7d8dfac) and click on Share -> Publish.
+# Preview production build locally
+npm run preview
+```
 
-## I want to use a custom domain - is that possible?
+### Environment Setup
+1. Copy `.env.example` to `.env`
+2. Update the environment variables according to your deployment environment
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+### Deployment Platforms
+
+#### Vercel
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel project settings
+3. Deploy using Vercel's automatic deployment
+
+#### Netlify
+1. Connect your GitHub repository to Netlify
+2. Set build command to `npm run build`
+3. Set publish directory to `dist`
+4. Configure environment variables in Netlify settings
+
+#### Traditional Hosting
+1. Run `npm run build`
+2. Upload the contents of the `dist` directory to your web server
+3. Configure your web server to serve the application
+4. Ensure all routes redirect to `index.html` for client-side routing
+
+### Performance Optimization
+- Assets are automatically optimized during build
+- JavaScript is split into chunks for better caching
+- Source maps are disabled in production for smaller bundle size
+
+## Recent Improvements
+
+- **Error Boundaries**: Implemented global error boundaries to prevent app crashes
+- **Form Validation**: Added Zod schema validation for robust form handling
+- **API Integration**: Created a clean service layer with proper error handling
+- **Mock Data Support**: Added support for both mock data and real API endpoints
+- **Component Organization**: Improved component structure with barrel exports
